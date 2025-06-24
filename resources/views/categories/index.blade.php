@@ -1,84 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Kategori</title>
-    <style>
-        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; }
-        .container { max-width: 800px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; }
-        .alert { padding: 10px; margin-bottom: 20px; border-radius: 5px; }
-        .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .button-group { margin-bottom: 20px; }
-        .button {
-            display: inline-block;
-            padding: 8px 15px;
-            margin-right: 5px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            cursor: pointer;
-        }
-        .button-secondary { background-color: #6c757d; }
-        .button-danger { background-color: #dc3545; }
-        .button-warning { background-color: #ffc107; color: #212529; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        form { display: inline-block; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Daftar Kategori</h1>
+<x-app-layout>
 
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Daftar Kategori {{ (Auth::user()->name) }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+
+                    <div class="mb-6">
+                        <a href="{{ route('categories.create') }}"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                            Tambah Kategori Baru
+                        </a>
+                    </div>
+                    @if ($categories->isEmpty())
+                        <p>Belum ada kategori yang ditambahkan.</p>
+                    @else
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Nama Kategori</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Dibuat Pada</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-200 uppercase tracking-wider">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                                    @foreach ($categories as $category)
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ $category->category_name }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">{{ $category->created_at->format('d-m-Y H:i') }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap flex gap-2">
+                                                <a href="{{ route('categories.show', $category->id) }}"
+                                                    class="inline-flex items-center px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-xs">Lihat</a>
+                                                <a href="{{ route('categories.edit', $category->id) }}"
+                                                    class="inline-flex items-center px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 text-xs">Edit</a>
+                                                <form action="{{ route('categories.destroy', $category->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini? Semua tugas yang terhubung akan kehilangan kategori.')" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">Hapus</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+                </div>
             </div>
-        @endif
-
-        <div class="button-group">
-            <a href="{{ route('categories.create') }}" class="button">Tambah Kategori Baru</a>
-            <a href="{{ route('tasks.index') }}" class="button button-secondary">Lihat Daftar Tugas</a>
         </div>
-
-
-        @if ($categories->isEmpty())
-            <p>Belum ada kategori yang ditambahkan.</p>
-        @else
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nama Kategori</th>
-                        <th>Dibuat Pada</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($categories as $category)
-                        <tr>
-                            <td>{{ $category->id }}</td>
-                            <td>{{ $category->category_name }}</td>
-                            <td>{{ $category->created_at->format('d-m-Y H:i') }}</td>
-                            <td>
-                                <a href="{{ route('categories.show', $category->id) }}" class="button button-secondary">Lihat</a>
-                                <a href="{{ route('categories.edit', $category->id) }}" class="button button-warning">Edit</a>
-                                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini? Semua tugas yang terhubung akan kehilangan kategori.')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="button button-danger">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
     </div>
-</body>
-</html>
+</x-app-layout>

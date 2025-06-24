@@ -28,7 +28,6 @@
     <div class="container">
         <h1>Detail Kategori</h1>
 
-        <p><strong>ID Kategori:</strong> {{ $category->id }}</p>
         <p><strong>Nama Kategori:</strong> {{ $category->category_name }}</p>
         <p><strong>Dibuat Pada:</strong> {{ $category->created_at->format('d-m-Y H:i') }}</p>
         <p><strong>Terakhir Diperbarui:</strong> {{ $category->updated_at->format('d-m-Y H:i') }}</p>
@@ -38,3 +37,6 @@
     </div>
 </body>
 </html>
+
+
+{{-- ubah jadi tailwind css --}}
