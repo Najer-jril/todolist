@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id(); // category_id sebagai Primary Key
-            $table->string('category_name')->unique();
-            $table->timestamps();
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->timestamp('completed_at')->nullable()->after('status');
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropColumn('completed_at');
+        });
     }
 };
