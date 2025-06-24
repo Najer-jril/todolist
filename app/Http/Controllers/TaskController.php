@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -33,17 +34,21 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //dd($request->all());
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'desc' => 'nullable|string',
             'due_date' => 'nullable|date',
             'priority' => 'nullable|in:High,Medium,Low',
             'status' => 'required|in:pending,completed',
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        Task::create($request->all());
+        $data = array_merge($validated, [
+            'user_id' => Auth::id(),
+            // 'completed_at' => $request->status === 'completed' ? now() : null,
+        ]);
+
+        Task::create($data);
 
         return redirect()->route('tasks.index')->with('success', 'Tugas baru berhasil ditambahkan.');
     }
@@ -78,7 +83,7 @@ class TaskController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
-            'priority' => 'nullable|in:High,Medium,Low',
+            'priority' => 'nullable|in:high,medium,low',
             'status' => 'required|in:pending,in progress,completed',
             'category_id' => 'required|exists:categories,id',
         ]);
