@@ -1,56 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Kategori Baru</title>
-    <style>
-        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; }
-        .container { max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { color: #333; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input[type="text"] { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        .button {
-            display: inline-block;
-            padding: 8px 15px;
-            margin-right: 5px;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
-            cursor: pointer;
-        }
-        .button-secondary { background-color: #6c757d; }
-        .error { color: #dc3545; font-size: 0.9em; margin-top: -5px; margin-bottom: 10px; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Tambah Kategori Baru</h1>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Tambah Kategori Baru
+        </h2>
+    </x-slot>
 
-        @if ($errors->any())
-            <div style="color: red; margin-bottom: 15px;">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-        <form action="{{ route('categories.store') }}" method="POST">
-            @csrf
-            <div>
-                <label for="category_name">Nama Kategori:</label>
-                <input type="text" id="category_name" name="category_name" value="{{ old('category_name') }}" required>
-                @error('category_name')
-                    <div class="error">{{ $message }}</div>
-                @enderror
+                    @if ($errors->any())
+                        <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                            role="alert">
+                            <strong class="font-bold">Oops!</strong>
+                            <span class="block sm:inline">Ada beberapa masalah dengan input Anda.</span>
+                            <ul class="mt-3 list-disc list-inside text-sm">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('categories.store') }}" method="POST" class="space-y-6">
+                        @csrf
+
+                        <!-- Nama Kategori -->
+                        <div>
+                            <label for="category_name"
+                                class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Kategori</label>
+                            <input type="text" name="category_name" id="category_name"
+                                value="{{ old('category_name') }}" required
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 sm:text-sm">
+                            @error('category_name')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Tombol Aksi -->
+                        <div class="flex items-center justify-end space-x-4">
+                            <a href="{{ route('categories.index') }}"
+                                class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                                Batal
+                            </a>
+                            <button type="submit"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                                Simpan Kategori
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <button type="submit" class="button">Simpan Kategori</button>
-            <a href="{{ route('categories.index') }}" class="button button-secondary">Batal</a>
-        </form>
+        </div>
     </div>
-</body>
-</html>
+</x-app-layout>

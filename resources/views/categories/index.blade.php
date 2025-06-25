@@ -37,8 +37,8 @@
                                             <td class="px-6 py-4 whitespace-nowrap flex gap-2">
                                                 <a href="{{ route('categories.show', $category->id) }}"
                                                     class="inline-flex items-center px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-xs">Lihat</a>
-                                                <a href="{{ route('categories.edit', $category->id) }}"
-                                                    class="inline-flex items-center px-3 py-1 bg-yellow-400 text-gray-900 rounded hover:bg-yellow-500 text-xs">Edit</a>
+                                                <a href="{{ route('categories.edit', $category->id) }}"\
+                                                    class="inline-flex items-center px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded hover:bg-gray-300 dark:hover:bg-gray-600 text-xs">Edit</a>
                                                 <form action="{{ route('categories.destroy', $category->id) }}"
                                                     method="POST"
                                                     onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini? Semua tugas yang terhubung akan kehilangan kategori.')" class="inline">
