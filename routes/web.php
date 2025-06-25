@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 
 
 Route::get('/', function () {
@@ -18,11 +19,8 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware(['auth'])->group(function () {
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->name('dashboard');
-
-        Route::resource('tasks', TaskController::class);
-        Route::resource('categories', CategoryController::class);
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
+    Route::resource('categories', CategoryController::class);
+    Route::resource('tasks', TaskController::class);
     });
