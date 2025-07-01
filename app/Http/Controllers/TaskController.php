@@ -14,7 +14,12 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::with('category')->orderBy('due_date', 'asc')->get();
+        $userId = Auth::id();
+
+        $tasks = Task::where('user_id', $userId)
+            ->with('category')
+            ->orderBy('due_date', 'asc')
+            ->get();
 
         return view('tasks.index', compact('tasks'));
     }
