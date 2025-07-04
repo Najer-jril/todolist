@@ -14,7 +14,7 @@
 <body class="font-sans antialiased h-full flex">
     <div class="h-full flex bg-gray-100 dark:bg-gray-900">
 
-        @include('layouts.sidebar')
+        @include('layouts.partials.sidebar')
 
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="bg-white dark:bg-gray-800 shadow">
