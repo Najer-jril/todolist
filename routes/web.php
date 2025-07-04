@@ -1,26 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
 
+// Dashboard & Landing
+Route::get('/', fn () => view('welcome'));
+Route::get('/dashboard', fn () => view('dashboard'))->middleware(['auth'])->name('dashboard');
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+// Auth Routes → bisa pakai Laravel Breeze / Fortify / Jetstream
+require __DIR__.'/auth.php';
 
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
+// Categories (CRUD)
+Route::resource('categories', CategoryController::class)->middleware('auth');
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+// Tasks (CRUD)
+Route::resource('tasks', TaskController::class)->middleware('auth');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', DashboardController::class)->name('dashboard');
-    Route::resource('categories', CategoryController::class);
-    Route::resource('tasks', TaskController::class);
-    });
+// Profile
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
